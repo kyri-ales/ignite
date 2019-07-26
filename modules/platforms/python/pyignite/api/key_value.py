@@ -68,7 +68,7 @@ def cache_put(
 
 def cache_get(
     connection: 'Connection', cache: Union[str, int], key,
-    key_hint=None, binary=False, query_id=None,
+    key_hint=None, binary=False, query_id=None, *args, **kwargs
 ) -> 'APIResult':
     """
     Retrieves a value from cache by key.
@@ -106,6 +106,7 @@ def cache_get(
         response_config=[
            ('value', AnyDataObject),
         ],
+        *args, **kwargs
     )
     if result.status != 0:
         return result

@@ -71,12 +71,17 @@ class PrimitiveArray(IgniteDataType):
 
     @classmethod
     def to_python(cls, ctype_object, *args, **kwargs):
-        result = []
-        data = ctype_object.data
-        ap = result.append
-        for i in range(ctype_object.length):
-            ap(data[i])
-        return result
+        response_raw = kwargs.get("response_raw")
+        if response_raw:
+            return ctype_object.data
+        else:
+            result = []
+            length = ctype_object.length
+            data = ctype_object.data
+            ap = result.append
+            for i in range(length):
+                ap(data[i])
+            return result
 
 
     @classmethod

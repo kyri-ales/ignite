@@ -188,7 +188,7 @@ class Cache:
         return cache_destroy(self._client, self._cache_id)
 
     @status_to_exception(CacheError)
-    def get(self, key, key_hint: object=None) -> Any:
+    def get(self, key, key_hint: object=None, *args, **kwargs) -> Any:
         """
         Retrieves a value from cache by key.
 
@@ -197,7 +197,7 @@ class Cache:
          should be converted,
         :return: value retrieved.
         """
-        result = cache_get(self._client, self._cache_id, key, key_hint=key_hint)
+        result = cache_get(self._client, self._cache_id, key, key_hint=key_hint, *args, **kwargs)
         result.value = self._process_binary(result.value)
         return result
 

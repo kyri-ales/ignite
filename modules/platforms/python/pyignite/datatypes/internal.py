@@ -285,7 +285,7 @@ class AnyDataObject:
             byteorder=PROTOCOL_BYTE_ORDER
         )
         data_class = tc_map(type_code)
-        return data_class.to_python(ctype_object)
+        return data_class.to_python(ctype_object, *args, **kwargs)
 
     @classmethod
     def _init_python_map(cls):

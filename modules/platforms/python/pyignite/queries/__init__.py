@@ -268,7 +268,7 @@ class Query:
 
     def perform(
         self, conn: 'Connection', query_params: dict=None,
-        response_config: list=None,
+        response_config: list=None, *args, **kwargs
     ) -> APIResult:
         """
         Perform query and process result.
@@ -288,7 +288,7 @@ class Query:
         response = response_ctype.from_buffer_copy(recv_buffer)
         result = APIResult(response)
         if result.status == 0:
-            result.value = response_struct.to_python(response)
+            result.value = response_struct.to_python(response, *args, **kwargs)
         return result
 
 
