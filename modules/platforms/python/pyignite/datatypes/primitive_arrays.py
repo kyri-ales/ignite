@@ -72,9 +72,12 @@ class PrimitiveArray(IgniteDataType):
     @classmethod
     def to_python(cls, ctype_object, *args, **kwargs):
         result = []
+        data = ctype_object.data
+        ap = result.append
         for i in range(ctype_object.length):
-            result.append(ctype_object.data[i])
+            ap(data[i])
         return result
+
 
     @classmethod
     def from_python(cls, value):
@@ -87,11 +90,14 @@ class PrimitiveArray(IgniteDataType):
             )
         length = len(value)
         header.length = length
-        buffer = bytes(header)
+        return cls.from_python_iterable(value, header)
 
+    @classmethod
+    def from_python_iterable(cls, value, header):
+        buffer = bytearray(header)
         for x in value:
             buffer += cls.primitive_type.from_python(x)
-        return buffer
+        return bytes(buffer)
 
 
 class ByteArray(PrimitiveArray):
@@ -159,6 +165,13 @@ class PrimitiveArrayObject(PrimitiveArray):
 class ByteArrayObject(PrimitiveArrayObject):
     primitive_type = Byte
     type_code = TC_BYTE_ARRAY
+
+    @classmethod
+    def from_python_iterable(cls, value, header):
+        buffer = bytearray(header)
+        cbytes = ctypes.c_byte * header.length
+        buffer += cbytes.from_buffer_copy(value)
+        return bytes(buffer)
 
 
 class ShortArrayObject(PrimitiveArrayObject):
